@@ -167,6 +167,7 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
         this.urlList = urlList;
         SELCET_LOAD_MODE = LOAD_MODE.URL;
         itemCount = urlList.size();
+        startLoad();
     }
 
 
@@ -181,8 +182,51 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
         this.resourceList = resourceList;
         SELCET_LOAD_MODE = LOAD_MODE.RESOURCE;
         itemCount = resourceList.size();
+        startLoad();
+
     }
 
+    /**
+     * 改变自动切换的状态
+     * @param flag
+     */
+    public void setAutoPlayState(boolean flag){
+        if(flag != isAutoPlay){
+            isAutoPlay = flag;
+            handler.removeMessages(HANDLE_MSG);
+            if(isAutoPlay){
+                handler.sendEmptyMessageDelayed(HANDLE_MSG,playIntervalTime);
+            }
+        }
+    }
+
+    /**
+     * 改变无限循环的状态
+     * @param flag
+     */
+    public void setInfiniteLoopState(boolean flag){
+        if(flag != isInfiniteLoop){
+            isInfiniteLoop = flag;
+            startLoad();
+        }
+
+    }
+    /**
+     * 修改指示点布局的显示隐藏状态
+     * @param flag true为显示，false为隐藏
+     */
+    public void setIndicationPointState(boolean flag){
+        if(flag){
+            if(!isNeedIndicationPoint){
+                isNeedIndicationPoint = true;
+                initPonitLinearLayout(this.getContext());
+                addIndicationPointToView();
+            }
+        }
+        else{
+            removeIndicationPoint();
+        }
+    }
 
     public void setCarouselFigureItemClickListener(CarouselFigureItemClickListener listener) {
         this.listener = listener;
@@ -219,30 +263,45 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
     }
 
 
-    /**
-     * 在设置完数据之后调用此方法进行显示
-     */
-    public void startLoad() {
 
+    private void startLoad() {
         if (SELCET_LOAD_MODE == 0)
             throw new RuntimeException(getContext().getString(R.string.startException));
         if (isNeedIndicationPoint) {
-            addIndicationPoint();
+            addIndicationPointToView();
         }
-        viewPager.setAdapter(new MyViewPagerAdapter());
+            viewPager.setAdapter(new MyViewPagerAdapter());
         if (isInfiniteLoop) {
-            viewPager.setCurrentItem(MAX_VALUE / 2 - (MAX_VALUE / 2) % itemCount);
+            viewPager.setCurrentItem(200 - (200 % itemCount));
         }
         if (isAutoPlay) {
+            handler.removeMessages(HANDLE_MSG);
             handler.sendEmptyMessageDelayed(HANDLE_MSG, playIntervalTime);
         }
     }
 
 
     /**
-     * 添加指示点
+     * 移除指示点布局
      */
-    private void addIndicationPoint() {
+    private void removeIndicationPoint(){
+        if(isNeedIndicationPoint){
+            this.removeView(indicationPointLayout);
+            isNeedIndicationPoint = false;
+        }
+    }
+
+
+
+
+    /**
+     * 添加指示点到布局当中
+     */
+    private void addIndicationPointToView() {
+        //防止刷新重复添加
+        if(indicationPointLayout.getChildCount() > 0){
+            indicationPointLayout.removeAllViews();
+        }
         ImageView pointImageView;
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins((int) pointLeft_Right_Margin, 0, (int) pointLeft_Right_Margin, (int) pointBottomMargin);
@@ -281,6 +340,7 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
 
             ImageView imageView = new ImageView(container.getContext());
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
             switch (SELCET_LOAD_MODE) {
                 case LOAD_MODE.URL:
                     loadImgByUrl(urlList.get(position % itemCount), imageView);
@@ -305,9 +365,8 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
-
-
         }
+
 
     }
 
@@ -373,6 +432,4 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
                 .crossFade()
                 .into(imageView);
     }
-
-
 }

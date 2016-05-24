@@ -1,19 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.my.view.CarouselFigureView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.my.view.CarouselFigureView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:mengyuan="http://schemas.android.com/apk/res-auto"
         android:id="@+id/carousel_figure_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        mengyuan:imgPlaceholderResource="@mipmap/img_empty"
         mengyuan:isAutoPlay="true"
         mengyuan:isInfiniteLoop="true"
         mengyuan:isNeedIndicationPoint="true"
         mengyuan:playIntervalTime="3000"
-        mengyuan:pointBottomMargin="3dp"
-        mengyuan:pointLeft_Right_Margin="5dp"
         mengyuan:pointBackground="@drawable/point_bg_test"
-        mengyuan:imgPlaceholderResource="@mipmap/img_empty"
-        />
+        mengyuan:pointBottomMargin="3dp"
+        mengyuan:pointLeft_Right_Margin="5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/add_url"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="添加url" />
+
+        <Button
+            android:id="@+id/remove_url"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="删除url" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/show_point"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="显示指示点" />
+
+        <Button
+            android:id="@+id/dismiss_point"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="隐藏指示点" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/start_autoplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="开启自动播放" />
+
+        <Button
+            android:id="@+id/close_autoplay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="关闭自动播放" />
+    </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/start_loop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="开启无限循环" />
+
+        <Button
+            android:id="@+id/close_loop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="关闭无限循环" />
+    </LinearLayout>
+</LinearLayout>

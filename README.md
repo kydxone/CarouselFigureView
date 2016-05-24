@@ -4,21 +4,20 @@
 **CarouselFigureView是一个支持自动切换、无限循环的轮播图控件。其主要作用就是实现项目当中的轮播图。
     CarouselFigureView有很强的适配性，可满足基本上所有的轮播图需求。
     你可以在代码中随意禁用自动切换、无限循环功能，也可以隐藏指示点。**
-![轮播图图片](http://img.blog.csdn.net/20160523152111122)
 
+![轮播图图片](http://img.blog.csdn.net/20160523152111122)
 #二、版本
     2016.5.17-v1.0.0
-
-    
-
-
-
-
+        1、项目完成
+    2016.5.24-v1.1.0
+        1、修复刷新时指示点翻倍bug
+        2、现在可在使用代码动态控制循环、自动切换、指示点显示
+        3、startLoad()私有，在设置数据时将自动调用
 
 #三、使用
 androidStudio可直接引用，支持maven()和jcenter()
 
-    compile 'com.github.z593492734:carouselfigureview:1.0.0'
+    compile 'com.github.z593492734:carouselfigureview:1.1.0'
 #四、详解－使用必读
 
 ###1、属性
@@ -64,6 +63,12 @@ androidStudio可直接引用，支持maven()和jcenter()
     setCarouselFigureItemClickListener(CarouselFigureItemClickListener listener)
             条目的点击事件，包含view 以及 position两个参数。
             position的最大值等于数据长度－1,所以可以直接使用，不需要做取余等处理。
+    setAutoPlayState(boolean flag)
+            是否开启自动切换功能，true开启反之关闭
+    setInfiniteLoopState(boolean flag)
+            是否开启无限循环功能，true开启反之关闭
+    setIndicationPointState(boolean flag)
+            是否显示指示点，true显示反之隐藏
 ###3、demo代码：
 ####布局文件：            
 ```
@@ -96,9 +101,8 @@ androidStudio可直接引用，支持maven()和jcenter()
           url.add("http://o.ypgimg.com/content/2016/5/16/e5a7b0e3-1a21-4e66-adc8-17a1b7c1a92f.jpg");
           url.add("http://o.ypgimg.com/content/2016/5/16/8bae5357-d542-4e52-ad5f-ad7d021fc163.jpg");
         //可使用setURL()或者setResourceList()，两者必选其一
+        //除了该方法，其余均为可选
           carouselFigureView.setURL(url);
-          //该方法为启动方法，必须调用
-          carouselFigureView.startLoad();
           //设置自定义style，我提供了goole官方的两种动画，可以直接使用
           //new DepthPageTransformer() 
           //new ZoomOutPageTransformer()
