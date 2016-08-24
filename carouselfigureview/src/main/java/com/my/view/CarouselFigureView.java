@@ -17,12 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.my.R;
+import com.my.view.switchanimotion.ViewPagerScroller;
 
 import java.lang.reflect.Field;
 import java.util.List;
-
-import com.my.R;
-import com.my.view.switchanimotion.ViewPagerScroller;
 
 /**
  * AUTHOR:       Yuan.Meng
@@ -188,42 +187,45 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
 
     /**
      * 改变自动切换的状态
+     *
      * @param flag
      */
-    public void setAutoPlayState(boolean flag){
-        if(flag != isAutoPlay){
+    public void setAutoPlayState(boolean flag) {
+        if (flag != isAutoPlay) {
             isAutoPlay = flag;
             handler.removeMessages(HANDLE_MSG);
-            if(isAutoPlay){
-                handler.sendEmptyMessageDelayed(HANDLE_MSG,playIntervalTime);
+            if (isAutoPlay) {
+                handler.sendEmptyMessageDelayed(HANDLE_MSG, playIntervalTime);
             }
         }
     }
 
     /**
      * 改变无限循环的状态
+     *
      * @param flag
      */
-    public void setInfiniteLoopState(boolean flag){
-        if(flag != isInfiniteLoop){
+    public void setInfiniteLoopState(boolean flag) {
+        if (flag != isInfiniteLoop) {
             isInfiniteLoop = flag;
             startLoad();
         }
 
     }
+
     /**
      * 修改指示点布局的显示隐藏状态
+     *
      * @param flag true为显示，false为隐藏
      */
-    public void setIndicationPointState(boolean flag){
-        if(flag){
-            if(!isNeedIndicationPoint){
+    public void setIndicationPointState(boolean flag) {
+        if (flag) {
+            if (!isNeedIndicationPoint) {
                 isNeedIndicationPoint = true;
                 initPonitLinearLayout(this.getContext());
                 addIndicationPointToView();
             }
-        }
-        else{
+        } else {
             removeIndicationPoint();
         }
     }
@@ -263,14 +265,13 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
     }
 
 
-
     private void startLoad() {
         if (SELCET_LOAD_MODE == 0)
             throw new RuntimeException(getContext().getString(R.string.startException));
         if (isNeedIndicationPoint) {
             addIndicationPointToView();
         }
-            viewPager.setAdapter(new MyViewPagerAdapter());
+        viewPager.setAdapter(new MyViewPagerAdapter());
         if (isInfiniteLoop) {
             viewPager.setCurrentItem(200 - (200 % itemCount));
         }
@@ -284,14 +285,12 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
     /**
      * 移除指示点布局
      */
-    private void removeIndicationPoint(){
-        if(isNeedIndicationPoint){
+    private void removeIndicationPoint() {
+        if (isNeedIndicationPoint) {
             this.removeView(indicationPointLayout);
             isNeedIndicationPoint = false;
         }
     }
-
-
 
 
     /**
@@ -299,7 +298,7 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
      */
     private void addIndicationPointToView() {
         //防止刷新重复添加
-        if(indicationPointLayout.getChildCount() > 0){
+        if (indicationPointLayout.getChildCount() > 0) {
             indicationPointLayout.removeAllViews();
         }
         ImageView pointImageView;
@@ -309,7 +308,7 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
         for (int i = 0; i < itemCount; i++) {
             pointImageView = new ImageView(this.getContext());
             pointImageView.setBackgroundResource(pointBackgroundId);
-            if (i == 0) {
+            if (i == lastPosition) {
                 pointImageView.setSelected(true);
             } else {
                 pointImageView.setSelected(false);
@@ -370,6 +369,12 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
 
     }
 
+    private void cancelSelect() {
+        for (int i = 0; i < indicationPointLayout.getChildCount(); i++) {
+            indicationPointLayout.getChildAt(i).setSelected(false);
+        }
+    }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -378,7 +383,7 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
     @Override
     public void onPageSelected(int position) {
         if (isNeedIndicationPoint) {
-            indicationPointLayout.getChildAt(lastPosition % itemCount).setSelected(false);
+            cancelSelect();
             indicationPointLayout.getChildAt(position % itemCount).setSelected(true);
         }
         lastPosition = position;
@@ -421,7 +426,6 @@ public class CarouselFigureView extends RelativeLayout implements ViewPager.OnPa
                 .load(url)
                 .placeholder(imgPlaceholderResource)
                 .crossFade()
-
                 .into(imageView);
     }
 
